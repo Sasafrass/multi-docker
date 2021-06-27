@@ -1,0 +1,20 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t sasafras/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true sasafras/react-test npm test
+
+after_success:
+  - docker build -t sasafras/multi-client ./client
+  - docker build -t sasafras/multi-nginx ./nginx
+  - docker build -t sasafras/multi-server ./server
+  - docker build -t sasafras/multi-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push sasafras/multi-client
+  - docker push sasafras/multi-nginx
+  - docker push sasafras/multi-server
+  - docker push sasafras/multi-worker
