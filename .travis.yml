@@ -19,7 +19,6 @@ after_success:
   - docker push sasafras/multi-server
   - docker push sasafras/multi-worker
 
-
 deploy:
   provider: elasticbeanstalk
   region: "us-east-2"
